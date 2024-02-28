@@ -3,17 +3,29 @@
 namespace InnDigit;
 
 use InnDigit\Components\Quiz\QuizForm;
+use InnDigit\Components\Quiz\ProcessData;
+use InnDigit\Components\Acf\RegisterFields;
 
 class Plugin
 {
+
+    //don't modify this otherwise the quiz data won't be sent
+    public function __construct()
+    {
+        add_action('wp_ajax_get_quiz_data', array($this, 'get_quiz_data'));
+        add_action('wp_ajax_nopriv_get_quiz_data', array($this, 'get_quiz_data'));
+    }
+
+    //run the plugin
     public function run()
     {
         add_action('wp_enqueue_scripts', [&$this, 'enqueue_assets']);
         add_action('loop_start', [&$this, 'construct_quiz_form']);
         add_shortcode('inn_digit_shortcode', [&$this, 'inn_digit_shortcode_fn']);
-        add_action('wp_ajax_my_get_quiz_data', [&$this, 'get_quiz_data']);
-        add_action('wp_ajax_nopriv_get_quiz_data', [&$this, 'get_quiz_data']);
+        RegisterFields::register();
     }
+
+
 
     public function enqueue_assets()
     {
@@ -57,8 +69,22 @@ class Plugin
         return $content;
     }
 
-    public function get_quiz_data($data)
+    public function get_quiz_data()
     {
-        wp_send_json_success('It works');
+        // Check if the data is set in the request
+        if (!isset($_POST['data'])) {
+            wp_send_json_error('Data not provided');
+            return;
+        }
+
+        // Get the data from the request
+        $data = $_POST['data'];
+
+        $processData = new ProcessData($data);
+        $data = $processData->sort($data);
+        
+
+
+        wp_send_json_success($data);
     }
 }

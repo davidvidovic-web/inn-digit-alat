@@ -52,7 +52,6 @@ class QuizForm
 
     public function create_content($content_array)
     {
-        
         $html = '<div class="tab-content-wrapper">';
 
         foreach ($content_array as $key => $content_item) {
@@ -88,7 +87,7 @@ class QuizForm
                         $html .= '<label for="' . $sub_field['name'] . '">' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
                         $html .= '<select class="' . ' ' . $type . ' ' . $sub_field['name'] . '" name="' . $sub_field['name'] . '">';
-                        foreach ($sub_field['choices'] as $quiz_value => $choice) {
+                        foreach ($sub_field['choices'] as $choice => $quiz_value) {
                             $html .= '<option data-quiz-value="' . $quiz_value . '" value="' . $choice . '">' . $choice . '</option>';
                         }
                         $html .= '</select>';
@@ -131,8 +130,7 @@ class QuizForm
                         $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
                         $html .= '<label>' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
-                        foreach ($sub_field['choices'] as $quiz_value => $choice) {
-
+                        foreach ($sub_field['choices'] as $choice => $quiz_value) {
                             $html .= '<div class="checkbox-wrap">' . $choice;
                             $html .= '<label class="checkbox-container" for="' . $choice . '">';
                             $html .= '<input data-quiz-value="' . $quiz_value . '" type="checkbox" class="' . $choice . '" name="' . $sub_field['name'] . '[]" value="' . $choice . '">';

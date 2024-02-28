@@ -62,6 +62,12 @@ jQuery(document).ready(function ($) {
     "Ne primjenjujemo digitalnu transformaciju u kompaniji.": "spec24",
   };
 
+  const validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+
   function populateSpec($spec) {
     $(".tab-content").each(function () {
       $allInputs = $(this).find(".field-wrap input");
@@ -132,7 +138,14 @@ jQuery(document).ready(function ($) {
 
   $(".submit-quiz").click(function () {
     if ($(this).text() === "Pošalji") {
-      quizData();
+      var email = $("input.kontakt_e-mail_adresa").val();
+      if (validateEmail(email)) {
+        quizData();
+      } else {
+        $text = "Unesite validan email";
+        $(".message").text($text);
+        $(".message-wrap").show();
+      }
     } else {
       manipulateButton($(this));
     }
@@ -163,12 +176,12 @@ jQuery(document).ready(function ($) {
       $this.text("Nastavi");
     }
 
-    $("html").animate(
-      {
-        scrollTop: scrollToEl.offset().top,
-      },
-      800 //speed
-    );
+    // $("html").animate(
+    //   {
+    //     scrollTop: scrollToEl.offset().top,
+    //   },
+    //   800 //speed
+    // );
   }
 
   function quizData() {
@@ -181,8 +194,9 @@ jQuery(document).ready(function ($) {
       $tabFields = $(this).find(".field-wrap"); // get all fields in tab
       $tabFieldsCount = $tabFields.length; // count all fields in tab
       $currentTab = $(this).attr("class");
-      $currentTab = $currentTab.replace("tab-content", "");
+      $currentTab = $currentTab.replace("tab-content ", "");
       $currentTab = $currentTab.replace("active", "");
+      $currentTab = $currentTab.replace(/\s/g, "");
       $selectedChoices = [];
       $tabFields.each(function (index, input) {
         $input = $(input).find("input:checked");
@@ -272,19 +286,22 @@ jQuery(document).ready(function ($) {
 
     if (allQuestionsAnswered === true) {
       let ajaxUrl = inndigit_ajax_object.ajax_url;
-      $.ajax({
-        type: "post",
-        url: ajaxUrl,
-        data: {
-          action: "get_quiz_data", // the action to fire in the server
-          data: $finalChoices, // any JS object
+      $data = $finalChoices;
+
+      $.post(
+        ajaxUrl,
+        {
+          action: "get_quiz_data",
+          data: $data,
         },
-        complete: function (response) {
-          console.log(JSON.parse(response.responseText).data);
-        },
-      });
+        function (response) {
+          if (response.success) {
+            console.log(response.data); // This will log the field value
+          } else {
+            console.log(response.data); // This will log the error message
+          }
+        }
+      );
     }
   }
-
-  //TODO: prikazati success message
 });

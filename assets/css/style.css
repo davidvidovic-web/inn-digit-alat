@@ -290,7 +290,6 @@
 
 .quiz .button {
   position: relative;
-  border: 0;
   transition: 0.5s;
   z-index: 1;
   min-width: 15rem;
@@ -304,6 +303,7 @@
   background: #0073aa;
   color: #fff;
   border-radius: 15px;
+  border: 2px solid transparent;
 }
 .quiz .button:before,
 .quiz .button:after {
@@ -313,7 +313,12 @@
 }
 .quiz .button.--double:hover {
   box-shadow: 5px 5px 0 #111;
+  background: #fff;
+  border: 2px solid #0073aa;
+  color: #0073aa;
+  font-weight: bold;
 }
+
 
 .input-wrap.text,
 .input-wrap.email {
