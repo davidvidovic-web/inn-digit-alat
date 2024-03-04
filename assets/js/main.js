@@ -222,8 +222,8 @@ jQuery(document).ready(function ($) {
             area: $currentTab,
             label: $label,
             data: {
-              dataValue: $(this).attr("data-quiz-value"),
-              dataSpec: $(this).attr("data-spec"),
+              dataValue: $(this).find("option:selected").attr("data-quiz-value"),
+              dataSpec: $(this).find("option:selected").attr("data-spec"),
             },
           };
           $(this).parents(".field-wrap").addClass("answered");
