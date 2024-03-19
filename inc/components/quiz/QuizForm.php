@@ -31,8 +31,7 @@ class QuizForm
     {
 
         $image_constants = Constants::$image_urls;
-        // var_dump($tabs);
-        $html = '<div class="quiz-tab">';
+        $html = '<div class="quiz-tab">'; 
         foreach ($tabs as $tab) {
             if ($tab[2] == 0) {
                 $html .= '<div class="tablinks active" data-wrapper="' . $tab[1] . '">';
@@ -98,7 +97,7 @@ class QuizForm
                         $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
                         $html .= '<label for="' . $sub_field['name'] . '">' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
-                        foreach ($sub_field['choices'] as $quiz_value => $choice) {
+                        foreach ($sub_field['choices'] as $choice => $quiz_value) {
                             $html .= '<label for="' . $sub_field['name'] . '">';
                             $html .= '<input data-quiz-value="' . $quiz_value . '" type="radio" class="' . $sub_field['name'] . '" name="' . $sub_field['name'] . '" value="' . $choice . '">';
                             $html .= '<span>' . $choice . '</span>';

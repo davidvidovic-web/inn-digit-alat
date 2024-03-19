@@ -60,6 +60,8 @@ jQuery(document).ready(function ($) {
     "Nedostatak finansijskih sredstava.": "spec23",
     "Nedostatak vizije i sveobuhvatne digitalne strategije.": "spec24",
     "Ne primjenjujemo digitalnu transformaciju u kompaniji.": "spec24",
+    'Ne, pri projektovanju novih proizvoda, koristimo usluge drugog preduzeća pri 3D projektovanju.' : 'spec20',
+    'Ne koristimo 3D modelovanje, ali ramišljamo da počnemo koristiti 3D modelovanje u razvoju novih proizvoda.' : 'spec20'
   };
 
   const validateEmail = (email) => {
@@ -132,7 +134,7 @@ jQuery(document).ready(function ($) {
   });
 
   $(".input-wrap.radio > label").click(function () {
-    $('.input-wrap.radio > label input[type="radio"]').attr("checked", false);
+    $(this).parents('.input-wrap.radio').find('input[type="radio"]').attr("checked", false);
     $(this).children('input[type="radio"]').attr("checked", true);
   });
 

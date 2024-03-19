@@ -115,6 +115,8 @@
   display: block;
   position: relative;
   cursor: pointer;
+  display: flex;
+  gap: 10px;
 }
 
 .quiz input[type="radio"] + span:before {
@@ -129,6 +131,7 @@
   border-radius: 50%;
   margin-inline-end: 0.5em;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .quiz input[type="radio"] + span:hover {
@@ -136,9 +139,8 @@
 }
 
 .quiz input[type="radio"]:checked + span {
-  background-color: var(--accent);
+  background-color: #0073aa;
   color: #fff;
-  background-image: linear-gradient(to top, #10597f, #10597f);
 }
 
 .quiz input[type="radio"]:checked + span:before {
@@ -161,6 +163,7 @@
   transform: rotate(90deg) scale(0);
   transition: 250ms ease;
   color: #111;
+  top: 6px;
 }
 
 .quiz input[type="radio"]:checked + span:after {
@@ -318,7 +321,6 @@
   color: #0073aa;
   font-weight: bold;
 }
-
 
 .input-wrap.text,
 .input-wrap.email {

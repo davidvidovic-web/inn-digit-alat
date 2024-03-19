@@ -2,9 +2,12 @@
 
 namespace InnDigit;
 
+
+use InnDigit\Components\Acf\Fields;
 use InnDigit\Components\Quiz\QuizForm;
 use InnDigit\Components\Quiz\ProcessData;
-use InnDigit\Components\Acf\RegisterFields;
+use InnDigit\Components\Pdf\ResultsPdf;
+
 
 class Plugin
 {
@@ -12,8 +15,8 @@ class Plugin
     //don't modify this otherwise the quiz data won't be sent
     public function __construct()
     {
-        add_action('wp_ajax_get_quiz_data', array($this, 'get_quiz_data'));
-        add_action('wp_ajax_nopriv_get_quiz_data', array($this, 'get_quiz_data'));
+        add_action('wp_ajax_get_quiz_data', [&$this, 'get_quiz_data']);
+        add_action('wp_ajax_nopriv_get_quiz_data', [&$this, 'get_quiz_data']);
     }
 
     //run the plugin
@@ -22,7 +25,8 @@ class Plugin
         add_action('wp_enqueue_scripts', [&$this, 'enqueue_assets']);
         add_action('loop_start', [&$this, 'construct_quiz_form']);
         add_shortcode('inn_digit_shortcode', [&$this, 'inn_digit_shortcode_fn']);
-        RegisterFields::register();
+        $fields = new Fields();
+        $fields->register();
     }
 
 
@@ -82,8 +86,9 @@ class Plugin
 
         $processData = new ProcessData($data);
         $data = $processData->sort($data);
-        
 
+        $pdf = new ResultsPdf();
+        $pdf->create_pdf($data);
 
         wp_send_json_success($data);
     }

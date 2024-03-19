@@ -29,7 +29,6 @@ class ProcessData
                     } else {
                         $godina = intval($data['dataValue']);
                         $contact[$label]['godina'] = $godina;
-                    
                     }
                 }
                 if ($data['dataSpec']) {
@@ -53,20 +52,16 @@ class ProcessData
         }
         $spec = array_unique($spec);
         $sorted_data['spec'] = $spec;
-        return $sorted_data;
+        $this->get_results($sorted_data);
+        // return $sorted_data;
     }
 
     public function get_results($data)
     {
-        $result = '';
-        if ($data['score'] <= 2) {
-            $result = 'Niste spremni za digitalizaciju';
-        } else if ($data['score'] <= 4) {
-            $result = 'Spremni ste za digitalizaciju';
-        } else {
-            $result = 'Veoma ste spremni za digitalizaciju';
-        }
+        $result = 'score';
+
         $data['result'] = $result;
+        var_dump($data);
         return $data;
     }
 }
