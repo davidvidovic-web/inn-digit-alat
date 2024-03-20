@@ -12,6 +12,6 @@ class ResultsPdf
         $mpdf = new Mpdf();
         $mpdf->WriteHTML('<h1>' . '$data' . '</h1>');
         $mpdf->Output(PLUGIN_DIR . 'pdfs/results.pdf', 'F');
-        return;
+        return $data;
     }
 }

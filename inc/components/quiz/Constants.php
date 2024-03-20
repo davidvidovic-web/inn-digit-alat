@@ -40,12 +40,11 @@ class Constants
     ];
 
     public static $points = [
-        'finansije_oblast_f' => 3,
+        'finansije_oblast_f' => 16,
         'marketing_oblast_m' => 22,
         'ljudski_resursi_oblast_h' => 10,
         'strategija_oblast_s' => 101,
-        'proces_oblast_p' => 74,
-        'kontakt_oblast_k' => 0,
+        'proces_oblast_p' => 74
     ];
 
     public static $comments = [
