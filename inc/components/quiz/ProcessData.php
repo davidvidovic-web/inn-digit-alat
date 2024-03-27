@@ -61,7 +61,6 @@ class ProcessData
     public function get_results($data)
     {
         $total_scores = Constants::$points;
-        $comments = Constants::$comments;
         $specs = Constants::$specs;
         $cummulative = 0;
         $all_specs = [];
@@ -77,7 +76,6 @@ class ProcessData
             }
             $cummulative += $grade;
             $data[$area]['grade'] = $grade;
-            $data[$area]['comment'] = $comments[$area_letter . $grade];
         }
         $cummulative = ($cummulative / 5);
         if ($cummulative <= 1.09) {
@@ -85,7 +83,7 @@ class ProcessData
         } elseif ($cummulative > 1.09 && $cummulative <= 2) {
             $general_result = 'Srednji';
         } else {
-            $general_result = 'Visok';
+            $general_result = 'Napredni';
         }
 
         foreach ($data['spec'] as $spec) {
@@ -94,7 +92,7 @@ class ProcessData
                 $all_specs[] = $spec_text;
             }
         }
-        $data['general'] = $general_result;
+        $data['general_result'] = $general_result;
         $data['spec'] = $all_specs;
         return $data;
     }

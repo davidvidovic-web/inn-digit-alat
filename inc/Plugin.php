@@ -7,6 +7,7 @@ use InnDigit\Components\Acf\Fields;
 use InnDigit\Components\Quiz\QuizForm;
 use InnDigit\Components\Quiz\ProcessData;
 use InnDigit\Components\Pdf\ResultsPdf;
+use InnDigit\Components\Email\Email;
 
 
 class Plugin
@@ -88,8 +89,14 @@ class Plugin
         $data = $processData->sort($data);
 
         $pdf = new ResultsPdf();
-        $pdf->create_pdf($data);
+        $email_data = $pdf->create_pdf($data);
+        $this->email_pdf($email_data);
+    }
 
-        wp_send_json_success($data);
+    public function email_pdf($email_data)
+    {
+        $mail = new Email;
+        $mail->generate_email($email_data);
+        wp_send_json_success('$poslano');
     }
 }

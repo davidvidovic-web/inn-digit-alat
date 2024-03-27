@@ -194,7 +194,7 @@
   z-index: 99999;
   position: relative;
   background: transparent;
-  appearance: none;
+  appearance: none !important;
 }
 
 /* Create a custom checkbox */
