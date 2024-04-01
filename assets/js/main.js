@@ -60,8 +60,10 @@ jQuery(document).ready(function ($) {
     "Nedostatak finansijskih sredstava.": "spec23",
     "Nedostatak vizije i sveobuhvatne digitalne strategije.": "spec24",
     "Ne primjenjujemo digitalnu transformaciju u kompaniji.": "spec24",
-    'Ne, pri projektovanju novih proizvoda, koristimo usluge drugog preduzeća pri 3D projektovanju.' : 'spec20',
-    'Ne koristimo 3D modelovanje, ali ramišljamo da počnemo koristiti 3D modelovanje u razvoju novih proizvoda.' : 'spec20'
+    "Ne, pri projektovanju novih proizvoda, koristimo usluge drugog preduzeća pri 3D projektovanju.":
+      "spec20",
+    "Ne koristimo 3D modelovanje, ali ramišljamo da počnemo koristiti 3D modelovanje u razvoju novih proizvoda.":
+      "spec20",
   };
 
   const validateEmail = (email) => {
@@ -134,7 +136,10 @@ jQuery(document).ready(function ($) {
   });
 
   $(".input-wrap.radio > label").click(function () {
-    $(this).parents('.input-wrap.radio').find('input[type="radio"]').attr("checked", false);
+    $(this)
+      .parents(".input-wrap.radio")
+      .find('input[type="radio"]')
+      .attr("checked", false);
     $(this).children('input[type="radio"]').attr("checked", true);
   });
 
@@ -177,17 +182,9 @@ jQuery(document).ready(function ($) {
     } else if ($this.text() !== "Nastavi") {
       $this.text("Nastavi");
     }
-
-    // $("html").animate(
-    //   {
-    //     scrollTop: scrollToEl.offset().top,
-    //   },
-    //   800 //speed
-    // );
   }
 
   function quizData() {
-    //TODO: Check if all questions are answered, if not, show error message
     // get each tab and check if all questions are answered
     var allQuestionsAnswered = false;
     $finalChoices = [];
@@ -202,20 +199,23 @@ jQuery(document).ready(function ($) {
       $selectedChoices = [];
       $tabFields.each(function (index, input) {
         $input = $(input).find("input:checked");
-        $input.each(function () {
-          $label = $(this).parents(".field-wrap").children("label").text();
-          $currentChoice = {
-            area: $currentTab,
-            label: $label,
-            data: {
-              dataValue: $(this).attr("data-quiz-value"),
-              dataSpec: $(this).attr("data-spec"),
-            },
-          };
-          $(this).parents(".field-wrap").addClass("answered");
+        if ($input.attr("type") === "checkbox") {
+          $input.each(function () {
+            $label = $(this).parents(".field-wrap").children("label").text();
+            $currentChoice = {
+              area: $currentTab,
+              label: $label,
+              data: {
+                dataValue: $(this).attr("data-quiz-value"),
+                dataSpec: $(this).attr("data-spec"),
+              },
+              textAnswer: $(this).parents(".checkbox-wrap").text(),
+            };
+            $(this).parents(".field-wrap").addClass("answered");
 
-          $selectedChoices.push($currentChoice);
-        });
+            $selectedChoices.push($currentChoice);
+          });
+        }
 
         $select = $(input).find("select");
         $select.each(function () {
@@ -224,9 +224,12 @@ jQuery(document).ready(function ($) {
             area: $currentTab,
             label: $label,
             data: {
-              dataValue: $(this).find("option:selected").attr("data-quiz-value"),
+              dataValue: $(this)
+                .find("option:selected")
+                .attr("data-quiz-value"),
               dataSpec: $(this).find("option:selected").attr("data-spec"),
             },
+            textAnswer: $(this).find("option:selected").attr("value"),
           };
           $(this).parents(".field-wrap").addClass("answered");
           $selectedChoices.push($currentChoice);
@@ -244,6 +247,7 @@ jQuery(document).ready(function ($) {
                 dataSpec: $(this).attr("data-spec"),
                 text: $(this).val(),
               },
+              textAnswer: $(this).parents(".checkbox-wrap").text(),
             };
             $(this).parents(".field-wrap").addClass("answered");
             $selectedChoices.push($currentChoice);
@@ -262,6 +266,25 @@ jQuery(document).ready(function ($) {
                 dataSpec: $(this).attr("data-spec"),
                 text: $(this).val(),
               },
+            };
+            $(this).parents(".field-wrap").addClass("answered");
+            $selectedChoices.push($currentChoice);
+          }
+        });
+
+        $radio = $(input).find("input[type='radio']");
+        $radio.each(function () {
+          $label = $(this).parents(".field-wrap").children("label").text();
+          if ($(this).val() !== "") {
+            $currentChoice = {
+              area: $currentTab,
+              label: $label,
+              data: {
+                dataValue: $(this).attr("data-quiz-value"),
+                dataSpec: $(this).attr("data-spec"),
+                text: $(this).val(),
+              },
+              textAnswer: $(this).next().text(),
             };
             $(this).parents(".field-wrap").addClass("answered");
             $selectedChoices.push($currentChoice);
@@ -298,9 +321,9 @@ jQuery(document).ready(function ($) {
         },
         function (response) {
           if (response.success) {
-            console.log(response.data); // This will log the field value
+            console.log(response.data); // log the field value
           } else {
-            console.log(response.data); // This will log the error message
+            console.log(response.data); // error message
           }
         }
       );

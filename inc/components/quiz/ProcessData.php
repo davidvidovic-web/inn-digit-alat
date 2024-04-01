@@ -7,6 +7,106 @@ use InnDigit\Components\Quiz\Constants;
 class ProcessData
 {
 
+    public function write_to_db($data)
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'inndigit';
+        $write_to_db = [];
+        foreach ($data as $entry_group) {
+            $area_name = '';
+
+            foreach ($entry_group as $entry_index => $entries) {
+                if ($area_name === '') {
+                    $area_name = $entries['area'];
+                }
+
+                if ($area_name !== 'kontakt_oblast_k') {
+                    $questionuestion = $entries['label'];
+                    $answer = $entries['textAnswer'];
+                    $write_to_db[$area_name][$questionuestion][] = $answer;
+                } else {
+                    if ($entries['label'] === 'Naziv privrednog društva:' || $entries['label'] === 'Kontakt e-mail adresa') {
+                        $questionuestion = $entries['label'];
+                        $answer = $entries['data']['text'];
+                        $write_to_db[$area_name][$questionuestion][] = $answer;
+                    }
+                }
+            }
+        }
+        $update = [];
+        foreach ($write_to_db as $area_name => $area_questions_answers) {
+            switch ($area_name) {
+                case 'finansije_oblast_f':
+                    foreach ($area_questions_answers as $question => $answer) {
+                        $update['finansije_q'][] =  $question;
+                        $update['finansije_a'][] = $answer;
+                    }
+                    break;
+                case 'kontakt_oblast_k':
+                    foreach ($area_questions_answers as $question => $answer) {
+                        if ($question === 'Naziv privrednog društva:') {
+                            $update['naziv_privrednog_drustva'] = $answer[0];
+                        } else {
+                            $update['email'] = $answer[0];
+                        }
+                    }
+                    break;
+                case 'ljudski_resursi_oblast_h':
+                    foreach ($area_questions_answers as $question => $answer) {
+                        $update['ljudski_resursi_q'][] =  $question;
+                        $update['ljudski_resursi_a'][] = $answer;
+                    }
+                    break;
+                case 'marketing_oblast_m':
+                    foreach ($area_questions_answers as $question => $answer) {
+                        $update['marketing_q'][] =  $question;
+                        $update['marketing_a'][] = $answer;
+                    }
+                    break;
+                case 'proces_oblast_p':
+                    foreach ($area_questions_answers as $question => $answer) {
+                        $update['proces_q'][] =  $question;
+                        $update['proces_a'][] = $answer;
+                    }
+                    break;
+                case 'strategija_oblast_s':
+                    foreach ($area_questions_answers as $question => $answer) {
+                        $update['strategija_q'][] =  $question;
+                        $update['strategija_a'][] = $answer;
+                    }
+                    break;
+            }
+        }
+
+        $date = time();
+        $date = $this->toDateTime($date);
+
+
+
+
+
+        $result = $wpdb->insert("$table_name", array(
+            'finansije_q' => serialize($update['finansije_q']),
+            'finansije_a' => serialize($update['finansije_a']),
+            'naziv_privrednog_drustva' => $update['naziv_privrednog_drustva'],
+            'email' => $update['email'],
+            'ljudski_resursi_q' => serialize($update['ljudski_resursi_q']),
+            'ljudski_resursi_a' => serialize($update['ljudski_resursi_a']),
+            'marketing_q' => serialize($update['marketing_q']),
+            'marketing_a' => serialize($update['marketing_a']),
+            'proces_q' => serialize($update['proces_q']),
+            'proces_a' => serialize($update['proces_a']),
+            'strategija_q' => serialize($update['strategija_q']),
+            'strategija_a' => serialize($update['strategija_a']),
+            'datum' => $date
+        ));
+    }
+
+    public static function toDateTime($unixTimestamp)
+    {
+        return date("Y-m-d H:m:s", $unixTimestamp);
+    }
+
     public function sort($data)
     {
         $sorted_data = [];
@@ -15,7 +115,6 @@ class ProcessData
             $area_name = '';
             $total_score = 0;
 
-            $questions_and_text_answers = [];
             $contact = [];
             foreach ($entry_group as $entry_index => $entries) {
 
@@ -37,7 +136,7 @@ class ProcessData
                     $spec[] = $data['dataSpec'];
                 }
                 if (!is_numeric($data['dataValue'])) {
-                    // $questions_and_text_answers[$label][] = $data['dataValue'];
+                    // leave empty for results validity, should be questions & answers
                 }
                 if ($area_name === 'kontakt_oblast_k') {
                     if ($data['text']) {
@@ -49,8 +148,6 @@ class ProcessData
             }
 
             $sorted_data[$area_name]['score'] = [$total_score];
-
-            // $sorted_data[$area_name]['questions_and_text_answers'] = $questions_and_text_answers;
         }
         $spec = array_unique($spec);
         $sorted_data['spec'] = $spec;

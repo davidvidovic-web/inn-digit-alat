@@ -4,10 +4,12 @@ namespace InnDigit;
 
 
 use InnDigit\Components\Acf\Fields;
+use InnDigit\Components\Admin\Admin;
 use InnDigit\Components\Quiz\QuizForm;
 use InnDigit\Components\Quiz\ProcessData;
 use InnDigit\Components\Pdf\ResultsPdf;
 use InnDigit\Components\Email\Email;
+
 
 
 class Plugin
@@ -18,6 +20,8 @@ class Plugin
     {
         add_action('wp_ajax_get_quiz_data', [&$this, 'get_quiz_data']);
         add_action('wp_ajax_nopriv_get_quiz_data', [&$this, 'get_quiz_data']);
+        add_action('wp_ajax_get_quiz_data_db', [&$this, 'get_quiz_data_db']);
+        add_action('wp_ajax_nopriv_get_quiz_data_db', [&$this, 'get_quiz_data_db']);
     }
 
     //run the plugin
@@ -26,8 +30,44 @@ class Plugin
         add_action('wp_enqueue_scripts', [&$this, 'enqueue_assets']);
         add_action('loop_start', [&$this, 'construct_quiz_form']);
         add_shortcode('inn_digit_shortcode', [&$this, 'inn_digit_shortcode_fn']);
+        register_activation_hook(PLUGIN_DIR . '/InnDigit.php', [&$this, 'create_plugin_table']);
         $fields = new Fields();
         $fields->register();
+        if (is_admin()) {
+            $admin = new Admin();
+        }
+    }
+
+    public function create_plugin_table()
+    {
+        global $wpdb;
+        $db_table_name = $wpdb->prefix . 'inndigit';  // table name
+        // $charset_collate = $wpdb->get_charset_collate();X
+
+        //Check to see if the table exists already, if not, then create it
+        if ($wpdb->get_var("show tables like '$db_table_name'") != $db_table_name) {
+            $sql = "CREATE TABLE $db_table_name (
+                        id bigint(20) NOT NULL auto_increment,
+                        finansije_q text NOT NULL,
+                        finansije_a texT NOT NULL,
+                        marketing_q text NOT NULL,
+                        marketing_a text NOT NULL,
+                        ljudski_resursi_q text NOT NULL,
+                        ljudski_resursi_a text NOT NULL,
+                        proces_q text NOT NULL,
+                        proces_a text NOT NULL,
+                        strategija_q text NOT NULL,
+                        strategija_a text NOT NULL,
+                        naziv_privrednog_drustva varchar(50) NOT NULL,
+                        email varchar(50) NOT NULL,
+                        datum datetime NOT NULL,
+                        UNIQUE KEY id (id)
+    
+                );";
+
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+        }
     }
 
 
@@ -82,10 +122,15 @@ class Plugin
             return;
         }
 
+
+
+
+
         // Get the data from the request
         $data = $_POST['data'];
 
         $processData = new ProcessData($data);
+        $write_to_db = $processData->write_to_db($data);
         $data = $processData->sort($data);
 
         $pdf = new ResultsPdf();
@@ -97,6 +142,34 @@ class Plugin
     {
         $mail = new Email;
         $mail->generate_email($email_data);
-        wp_send_json_success('$poslano');
+    }
+
+
+    public function get_quiz_data_db()
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'inndigit';
+
+        $sql = "SELECT * FROM $table";
+        $results = $wpdb->get_results($sql);
+
+
+
+        foreach ($results as $result) {
+            $result->finansije_q = unserialize($result->finansije_q);
+            $result->finansije_a = unserialize($result->finansije_a);
+            $result->ljudski_resursi_q = unserialize($result->ljudski_resursi_q);
+            $result->ljudski_resursi_a = unserialize($result->ljudski_resursi_a);
+            $result->marketing_q = unserialize($result->marketing_q);
+            $result->marketing_a = unserialize($result->marketing_a);
+            $result->proces_q = unserialize($result->proces_q);
+            $result->proces_a = unserialize($result->proces_a);
+            $result->strategija_q = unserialize($result->strategija_q);
+            $result->strategija_a = unserialize($result->strategija_a);
+        }
+
+        wp_send_json_success($results);
+
+        return $results;
     }
 }
