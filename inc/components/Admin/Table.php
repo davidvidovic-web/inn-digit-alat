@@ -1,7 +1,10 @@
-<link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-html5-3.0.1/datatables.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/r-3.0.1/datatables.min.css" rel="stylesheet"> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-html5-3.0.1/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/r-3.0.1/datatables.min.js"></script>
 <table class="table table-striped" style="width:100%"></table>
 </div>
 <script>
@@ -15,7 +18,6 @@
             },
             function(response) {
                 if (response.success) {
-                    console.log(response.data);
                     tableData = response.data; // log the field value
                     let columns = [];
                     for (let i in tableData) {
@@ -23,39 +25,34 @@
                         columns[i].push(tableData[i].naziv_privrednog_drustva);
                         columns[i].push(tableData[i].email);
                         for (let j in tableData[i].finansije_q) {
-                            // let finansije_question = tableData[i].finansije_q[j];
-                            const answer = Object.values(tableData[i].finansije_a[j]);
+                            let answer = Object.values(tableData[i].finansije_a[j]);
                             columns[i].push(answer);
-                            // finansije.push(answer);
                         }
                         for (let j in tableData[i].marketing_q) {
-                            // let marketing_question = tableData[i].marketing_q[j];
-                            const answer = Object.values(tableData[i].marketing_a[j]);
+                            let answer = Object.values(tableData[i].marketing_a[j]);
                             columns[i].push(answer);
                         }
-                        console.log(columns[i]);
                         for (let j in tableData[i].ljudski_resursi_q) {
-                            // let ljudski_resursi_question = tableData[i].ljudski_resursi_q[j];
                             columns[i].push(tableData[i].ljudski_resursi_a[j]);
                         }
                         for (let j in tableData[i].proces_q) {
-                            // let proces_question = tableData[i].proces_q[j];
-                            const answer = Object.values(tableData[i].proces_a[j]);
+                            let answer = Object.values(tableData[i].proces_a[j]);
                             columns[i].push(answer);
                         }
                         for (let j in tableData[i].strategija_q) {
-                            // let strategija_question = tableData[i].strategija_q[j];
-                            const answer = Object.values(tableData[i].strategija_a[j]);
+                            let answer = Object.values(tableData[i].strategija_a[j]);
                             columns[i].push(answer);
                         }
 
                         columns[i].push(tableData[i].datum);
                     }
 
-                    console.log(columns);
-
-                    let table = new DataTable('.table', {
-                        responsive: true,
+                    $('.table').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'excel',
+                            'print'
+                        ],
                         columns: [{
                                 title: 'Naziv privrednog drustva'
                             },
@@ -122,11 +119,34 @@
                         ],
                         data: columns
                     });
+
+                    createInnerRows();
+
                 } else {
                     console.log(response.data); // error message
                 }
             }
         );
+
+        function createInnerRows() {
+            $('.dataTable td').each(function() {
+                let answerText = $(this).text();
+                let splitText = answerText.split('.,');
+                let finalText = '';
+                splitText.forEach(function(text, index) {
+                    text = document.createTextNode('<div>' + text + '</div>');
+                    $(this).append(text);
+                    // finalText += text;
+                    // console.log(finalText)
+                })
+                console.log(finalText);
+                // $(this).text(finalText);
+                // $('.dataTable ').listview('trigger');
+            })
+        }
+
+
+
 
 
     })

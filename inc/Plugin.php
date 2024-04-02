@@ -97,6 +97,30 @@ class Plugin
             )
         );
         wp_enqueue_script('inndigit-script');
+
+        wp_enqueue_style(
+            'app-style', // Handle
+            PLUGIN_URL . 'assets/admin-panel/index-DiwrgTda.css', // File path
+            array(), // Dependencies
+            '1.0', // Version number
+            'all' // Media
+        );
+
+        wp_register_script(
+            'app-script', // Handle
+            PLUGIN_URL . 'assets/admin-panel/index-Bs-7NnlE.js', // File path
+            array(), // Dependencies
+            '1.0', // Version number
+            true // In footer
+        );
+        wp_localize_script(
+            'app-script',
+            'inndigit_ajax_object',
+            array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+            )
+        );
+        wp_enqueue_script('app-script');
     }
 
     public function construct_quiz_form()
