@@ -9,6 +9,7 @@ class Admin
     {
         add_action('admin_menu', [&$this, 'register_plugin_admin_area']);
         add_action('wp_enqueue_scripts', [&$this, 'enqueue_app_scripts']);
+        add_shortcode('frontend_shortcode', [&$this, 'frontend_shortcode']);
     }
     public function register_plugin_admin_area()
     {
@@ -23,9 +24,16 @@ class Admin
         );
     }
 
-    public function enqueue_app_scripts()
+    public function frontend_shortcode($atts, $content = "")
     {
-        
+        $atts = shortcode_atts(array(
+            '' => '',
+        ), $atts);
+
+        $html = '<div id="app"></div>';
+        $html .= '<script src="/wp-content/plugins/inn-digit-alat/frontend/dist/assets/js/index.js"></script>';
+        $html .= '<link rel="stylesheet" crossorigin href="/wp-content/plugins/inn-digit-alat/frontend/dist/assets/css/index.css">';
+        return $html;
     }
 
 

@@ -143,6 +143,22 @@ jQuery(document).ready(function ($) {
     $(this).children('input[type="radio"]').attr("checked", true);
   });
 
+  $(".input-wrap.checkbox input").on("change", function () {
+    $(this).parents(".field-wrap").addClass("answered");
+  });
+
+  $(".input-wrap.text input").on("change", function () {
+    $(this).parents(".field-wrap").addClass("answered");
+  });
+
+  $(".input-wrap.email input").on("change", function () {
+    $(this).parents(".field-wrap").addClass("answered");
+  });
+
+  $(".input-wrap.radio input").on("change", function () {
+    $(this).parents(".field-wrap").addClass("answered");
+  });
+
   $(".submit-quiz").click(function () {
     if ($(this).text() === "Pošalji") {
       var email = $("input.kontakt_e-mail_adresa").val();
@@ -154,7 +170,21 @@ jQuery(document).ready(function ($) {
         $(".message-wrap").show();
       }
     } else {
-      manipulateButton($(this));
+      $getAnswered = $(".active .answered");
+      $tabFieldsCount = $(".active .field-wrap");
+      console.log($getAnswered, $tabFieldsCount);
+      if ($getAnswered.length != $tabFieldsCount.length) {
+        $text = "Niste odgovorili na sva pitanja";
+        $(".message").text($text);
+        $(".message-wrap").show();
+      } else if (!$(".checkbox-confirmation").is(":checked")) {
+        $text = "Morate prihvatiti uslove korišćenja kako bi poslali upitnik.";
+        $(".message").text($text);
+        $(".message-wrap").show();
+      } else {
+        allQuestionsAnswered = true;
+        manipulateButton($(this));
+      }
     }
   });
 
@@ -182,6 +212,13 @@ jQuery(document).ready(function ($) {
     } else if ($this.text() !== "Nastavi") {
       $this.text("Nastavi");
     }
+
+    $("html").animate(
+      {
+        scrollTop: scrollToEl.offset().top,
+      },
+      500 //speed
+    );
   }
 
   function quizData() {
@@ -197,6 +234,7 @@ jQuery(document).ready(function ($) {
       $currentTab = $currentTab.replace("active", "");
       $currentTab = $currentTab.replace(/\s/g, "");
       $selectedChoices = [];
+
       $tabFields.each(function (index, input) {
         $input = $(input).find("input:checked");
         if ($input.attr("type") === "checkbox") {
@@ -294,39 +332,24 @@ jQuery(document).ready(function ($) {
       $finalChoices.push($selectedChoices);
     });
 
-    $getAnswered = $(".answered");
-    if ($getAnswered.length != $tabContent.length) {
-      if (!$(".checkbox-confirmation").is(":checked")) {
-        $text = "Morate prihvatiti uslove korišćenja kako bi poslali upitnik.";
-        $(".message").text($text);
-        $(".message-wrap").show();
-      } else {
-        $text = "Niste odgovorili na sva pitanja";
-        $(".message").text($text);
-        $(".message-wrap").show();
-      }
-    } else {
-      allQuestionsAnswered = true;
-    }
+    // if (allQuestionsAnswered === true) {
+    let ajaxUrl = inndigit_ajax_object.ajax_url;
+    $data = $finalChoices;
 
-    if (allQuestionsAnswered === true) {
-      let ajaxUrl = inndigit_ajax_object.ajax_url;
-      $data = $finalChoices;
-
-      $.post(
-        ajaxUrl,
-        {
-          action: "get_quiz_data",
-          data: $data,
-        },
-        function (response) {
-          if (response.success) {
-            console.log(response.data); // log the field value
-          } else {
-            console.log(response.data); // error message
-          }
+    $.post(
+      ajaxUrl,
+      {
+        action: "get_quiz_data",
+        data: $data,
+      },
+      function (response) {
+        if (response.success) {
+          console.log(response.data); // log the field value
+        } else {
+          console.log(response.data); // error message
         }
-      );
-    }
+      }
+    );
+    // }
   }
 });

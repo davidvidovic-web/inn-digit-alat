@@ -47,13 +47,16 @@ class ResultsPdf
         $mpdf->AddPage();
         switch ($data['general_result']) {
             case 'Nizak':
-                $fileContent = file_get_contents(PLUGIN_URL . '/inc/Components/Pdf/templates/Nizak.pdf');
-
-                $level = $mpdf->setSourceFile($fileContent);
+                $file = PLUGIN_DIR . '/inc/Components/Pdf/templates/Nizak.pdf';
+                $input = str_replace(chr(0), '', $file);
+                $fileContent = file_get_contents($input);
+                $level = $mpdf->setSourceFile($input);
                 break;
             case 'Srednji':
-                $fileContent = file_get_contents(PLUGIN_URL . '/inc/Components/Pdf/templates/Srednji.pdf');
-                $level = $mpdf->setSourceFile($fileContent);
+                $file = PLUGIN_DIR . '/inc/Components/Pdf/templates/Srednji.pdf';
+                $input = str_replace(chr(0), '', $file);
+                $fileContent = file_get_contents($input);
+                $level = $mpdf->setSourceFile($input);
                 break;
             case 'Napredni':
                 $file = PLUGIN_DIR . 'inc/Components/Pdf/templates/Napredni.pdf';

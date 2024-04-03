@@ -102,6 +102,12 @@
   padding: 20px;
 }
 
+.input-wrap.radio {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+/* 
 .quiz input[type="radio"] {
   visibility: hidden;
   position: absolute;
@@ -168,7 +174,7 @@
 
 .quiz input[type="radio"]:checked + span:after {
   transform: rotate(45deg);
-}
+} */
 
 /* Customize the label (the container) */
 .checkbox-container {

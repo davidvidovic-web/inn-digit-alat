@@ -10,7 +10,7 @@ class QuizForm
     public function data($fields)
     {
         if ($fields) {
-            $fields = array_reverse($fields);
+            // $fields = array_reverse($fields);
             $tabs_array = [];
             $content_array = [];
             foreach ($fields as $key => $field) {
@@ -82,7 +82,7 @@ class QuizForm
                         $html .= '</div>';
                         break;
                     case 'select':
-                        $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
+                        $html .= '<div class="field-wrap answered ' . $sub_field['name'] .  ' ">';
                         $html .= '<label for="' . $sub_field['name'] . '">' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
                         $html .= '<select class="' . ' ' . $type . ' ' . $sub_field['name'] . '" name="' . $sub_field['name'] . '">';
@@ -98,10 +98,11 @@ class QuizForm
                         $html .= '<label for="' . $sub_field['name'] . '">' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
                         foreach ($sub_field['choices'] as $choice => $quiz_value) {
-                            $html .= '<label for="' . $sub_field['name'] . '">';
-                            $html .= '<input data-quiz-value="' . $quiz_value . '" type="radio" class="' . $sub_field['name'] . '" name="' . $sub_field['name'] . '" value="' . $choice . '">';
-                            $html .= '<span>' . $choice . '</span>';
-                            $html .= '</label>';
+                            $html .= '<div class="checkbox-wrap">' . $choice;
+                            $html .= '<label class="checkbox-container" for="' . $choice . '">';
+                            $html .= '<input data-quiz-value="' . $quiz_value . '" type="radio" class="' . $choice . '" name="' . $sub_field['name'] . '[]" value="' . $choice . '">';
+                            $html .= '<span class="checkmark"></span></label>';
+                            $html .= '</div>';
                         }
                         $html .= '</div>';
                         $html .= '</div>';
@@ -116,12 +117,14 @@ class QuizForm
                         break;
                     case 'true_false':
                         $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
+                        $html .= '<div class="input-wrap checkbox">';
                         $html .= '<div class="checkbox-wrap">';
                         $html .= '<label class="checkbox-container-confirmation" for="' . $sub_field['name'] . '">' . $sub_field['label'];
                         $html .= '<div>';
                         $html .= '<input type="checkbox" class="checkbox-confirmation ' . $sub_field['name'] . '" name="' . $sub_field['name'] . '">' . $sub_field['message'] . '<span class="checkmark-confirmation"></span></label>';
                         $html .= '</div>';
                         $html .= '</label>';
+                        $html .= '</div>';
                         $html .= '</div>';
                         $html .= '</div>';
                         break;

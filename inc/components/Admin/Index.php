@@ -1,15 +1,9 @@
-<script crossorigin src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+<?php
+
+namespace InnDigit\Components\Admin; ?>
+
 <script>
-  (function() {
-
-    var vm = new Vue({
-      el: document.querySelector("#mount"),
-      mounted: function() {
-        console.log("Hello Vue!");
-      },
-    });
-
-    console.log('executed')
-  })();
+  var ajax_url = "<?php echo admin_url('admin-ajax.php'); ?>";
 </script>
-<div id="mount"></div>
+
+<?php echo do_shortcode('[frontend_shortcode]'); ?>
