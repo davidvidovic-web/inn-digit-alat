@@ -162,23 +162,22 @@ jQuery(document).ready(function ($) {
   $(".submit-quiz").click(function () {
     if ($(this).text() === "Pošalji") {
       var email = $("input.kontakt_e-mail_adresa").val();
-      if (validateEmail(email)) {
-        quizData();
-      } else {
+      if (!validateEmail(email)) {
         $text = "Unesite validan email";
-        $(".message").text($text);
-        $(".message-wrap").show();
-      }
-    } else {
-      $getAnswered = $(".active .answered");
-      $tabFieldsCount = $(".active .field-wrap");
-      console.log($getAnswered, $tabFieldsCount);
-      if ($getAnswered.length != $tabFieldsCount.length) {
-        $text = "Niste odgovorili na sva pitanja";
         $(".message").text($text);
         $(".message-wrap").show();
       } else if (!$(".checkbox-confirmation").is(":checked")) {
         $text = "Morate prihvatiti uslove korišćenja kako bi poslali upitnik.";
+        $(".message").text($text);
+        $(".message-wrap").show();
+      } else {
+        quizData();
+      }
+    } else {
+      $getAnswered = $(".active .answered");
+      $tabFieldsCount = $(".active .field-wrap");
+      if ($getAnswered.length != $tabFieldsCount.length) {
+        $text = "Niste odgovorili na sva pitanja iz trenutne oblasti";
         $(".message").text($text);
         $(".message-wrap").show();
       } else {
@@ -253,6 +252,24 @@ jQuery(document).ready(function ($) {
 
             $selectedChoices.push($currentChoice);
           });
+        } else if ($input.attr("type") === "radio") {
+          $radio = $(".tab-content").find("input[type='radio']:checked");
+          $radio.each(function () {
+            $label = $(this).parents(".field-wrap").children("label").text();
+            if ($(this).val() !== "") {
+              $currentChoice = {
+                area: $currentTab,
+                label: $label,
+                data: {
+                  dataValue: $(this).attr("data-quiz-value"),
+                  dataSpec: $(this).attr("data-spec"),
+                },
+                textAnswer: $(this).parents(".checkbox-wrap").text(),
+              };
+              $(this).parents(".field-wrap").addClass("answered");
+              $selectedChoices.push($currentChoice);
+            }
+          });
         }
 
         $select = $(input).find("select");
@@ -309,25 +326,6 @@ jQuery(document).ready(function ($) {
             $selectedChoices.push($currentChoice);
           }
         });
-
-        $radio = $(input).find("input[type='radio']");
-        $radio.each(function () {
-          $label = $(this).parents(".field-wrap").children("label").text();
-          if ($(this).val() !== "") {
-            $currentChoice = {
-              area: $currentTab,
-              label: $label,
-              data: {
-                dataValue: $(this).attr("data-quiz-value"),
-                dataSpec: $(this).attr("data-spec"),
-                text: $(this).val(),
-              },
-              textAnswer: $(this).next().text(),
-            };
-            $(this).parents(".field-wrap").addClass("answered");
-            $selectedChoices.push($currentChoice);
-          }
-        });
       });
       $finalChoices.push($selectedChoices);
     });
@@ -344,7 +342,14 @@ jQuery(document).ready(function ($) {
       },
       function (response) {
         if (response.success) {
-          console.log(response.data); // log the field value
+          var email =
+            response.data.kontakt_oblast_k["Kontakt e-mail adresa"][0];
+          $text =
+            "Upitnik je uspješno poslat. Provjerite " +
+            email +
+            " za rezultate.";
+          $(".message").text($text);
+          $(".message-wrap").show();
         } else {
           console.log(response.data); // error message
         }

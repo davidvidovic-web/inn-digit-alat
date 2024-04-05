@@ -71,7 +71,7 @@ class ProcessData
                     break;
                 case 'strategija_oblast_s':
                     foreach ($area_questions_answers as $question => $answer) {
-                        $update['strategija_q'][] =  $question;
+                        $update['strategija_q'][] = $question;
                         $update['strategija_a'][] = $answer;
                     }
                     break;

@@ -111,7 +111,10 @@ class ResultsPdf
         $mpdf->WriteHTML('');
         $date = date('Y-m-d');
         $pdfName = $companyName . '-rezultati-' . $date . '.pdf';
-        $mpdf->Output(PLUGIN_DIR . 'pdfs/' . $pdfName, 'F');
+        if (!file_exists(PLUGIN_DIR . 'pdfs/' . $pdfName)) {
+            $mpdf->Output(PLUGIN_DIR . 'pdfs/' . $pdfName, 'F');
+        }
+
 
         $emailData = [
             'company' => $companyName,

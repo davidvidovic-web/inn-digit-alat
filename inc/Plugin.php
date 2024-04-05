@@ -136,6 +136,8 @@ class Plugin
         $pdf = new ResultsPdf();
         $email_data = $pdf->create_pdf($data);
         $this->email_pdf($email_data);
+        wp_send_json_success($data);
+        
     }
 
     public function email_pdf($email_data)

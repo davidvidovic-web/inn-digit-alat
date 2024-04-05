@@ -30,10 +30,8 @@ class Admin
             '' => '',
         ), $atts);
 
-        $html = '<div id="app"></div>';
-        $html .= '<script src="/wp-content/plugins/inn-digit-alat/frontend/dist/assets/js/index.js"></script>';
-        $html .= '<link rel="stylesheet" crossorigin href="/wp-content/plugins/inn-digit-alat/frontend/dist/assets/css/index.css">';
-        return $html;
+
+        return;
     }
 
 

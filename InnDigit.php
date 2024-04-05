@@ -2,7 +2,7 @@
 /*
 Plugin Name: InnDigitAlat
 Description: InnDigitAlat plugin za quiz
-Version: 1.0
+Version: 1.01
 Author: Lanaco
 Author URI: https://lanaco.com
 License: GPL2

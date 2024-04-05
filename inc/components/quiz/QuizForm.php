@@ -31,7 +31,7 @@ class QuizForm
     {
 
         $image_constants = Constants::$image_urls;
-        $html = '<div class="quiz-tab">'; 
+        $html = '<div class="quiz-tab">';
         foreach ($tabs as $tab) {
             if ($tab[2] == 0) {
                 $html .= '<div class="tablinks active" data-wrapper="' . $tab[1] . '">';
@@ -53,6 +53,8 @@ class QuizForm
     {
         $html = '<div class="tab-content-wrapper">';
 
+
+
         foreach ($content_array as $key => $content_item) {
             $name = $content_item[0];
             $sub_fields_array = $content_item[1];
@@ -73,7 +75,7 @@ class QuizForm
                 $type = $sub_field['type']; //Text Select Radio Button Email True / False Checkbox
                 switch ($type) {
                     case 'text':
-                        $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
+                        $html .= '<div class="field-wrap">';
                         $html .= '<label for="' . $sub_field['name'] . '">' . $sub_field['label'];
                         $html .= '<div class="input-wrap ' . $type . '">';
                         $html .= '<input type="text" class="' . $sub_field['name'] . '" name="' . $sub_field['name'] . '">';
@@ -82,7 +84,7 @@ class QuizForm
                         $html .= '</div>';
                         break;
                     case 'select':
-                        $html .= '<div class="field-wrap answered ' . $sub_field['name'] .  ' ">';
+                        $html .= '<div class="field-wrap answered">';
                         $html .= '<label for="' . $sub_field['name'] . '">' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
                         $html .= '<select class="' . ' ' . $type . ' ' . $sub_field['name'] . '" name="' . $sub_field['name'] . '">';
@@ -94,7 +96,7 @@ class QuizForm
                         $html .= '</div>';
                         break;
                     case 'radio':
-                        $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
+                        $html .= '<div class="field-wrap">';
                         $html .= '<label for="' . $sub_field['name'] . '">' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
                         foreach ($sub_field['choices'] as $choice => $quiz_value) {
@@ -108,7 +110,7 @@ class QuizForm
                         $html .= '</div>';
                         break;
                     case 'email':
-                        $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
+                        $html .= '<div class="field-wrap">';
                         $html .= '<label for="' . $sub_field['name'] . '">' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
                         $html .= '<input type="email" class="' . $sub_field['name'] . '" name="' . $sub_field['name'] . '">';
@@ -116,7 +118,7 @@ class QuizForm
                         $html .= '</div>';
                         break;
                     case 'true_false':
-                        $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
+                        $html .= '<div class="field-wrap">';
                         $html .= '<div class="input-wrap checkbox">';
                         $html .= '<div class="checkbox-wrap">';
                         $html .= '<label class="checkbox-container-confirmation" for="' . $sub_field['name'] . '">' . $sub_field['label'];
@@ -129,7 +131,7 @@ class QuizForm
                         $html .= '</div>';
                         break;
                     case 'checkbox':
-                        $html .= '<div class="field-wrap ' . $sub_field['name'] .  ' ">';
+                        $html .= '<div class="field-wrap">';
                         $html .= '<label>' . $sub_field['label'] . '</label>';
                         $html .= '<div class="input-wrap ' . $type . '">';
                         foreach ($sub_field['choices'] as $choice => $quiz_value) {
