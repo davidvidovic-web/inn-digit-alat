@@ -49,7 +49,7 @@ class Plugin
             $sql = "CREATE TABLE $db_table_name (
                         id bigint(20) NOT NULL auto_increment,
                         finansije_q text NOT NULL,
-                        finansije_a texT NOT NULL,
+                        finansije_a text NOT NULL,
                         marketing_q text NOT NULL,
                         marketing_a text NOT NULL,
                         ljudski_resursi_q text NOT NULL,
@@ -58,6 +58,7 @@ class Plugin
                         proces_a text NOT NULL,
                         strategija_q text NOT NULL,
                         strategija_a text NOT NULL,
+                        ocjena text NOT NULL,
                         naziv_privrednog_drustva varchar(50) NOT NULL,
                         email varchar(50) NOT NULL,
                         datum datetime NOT NULL,
@@ -158,16 +159,16 @@ class Plugin
 
 
         foreach ($results as $result) {
-            $result->finansije_q = unserialize($result->finansije_q);
-            $result->finansije_a = unserialize($result->finansije_a);
-            $result->ljudski_resursi_q = unserialize($result->ljudski_resursi_q);
-            $result->ljudski_resursi_a = unserialize($result->ljudski_resursi_a);
-            $result->marketing_q = unserialize($result->marketing_q);
-            $result->marketing_a = unserialize($result->marketing_a);
-            $result->proces_q = unserialize($result->proces_q);
-            $result->proces_a = unserialize($result->proces_a);
-            $result->strategija_q = unserialize($result->strategija_q);
-            $result->strategija_a = unserialize($result->strategija_a);
+            $result->finansije_q = json_decode($result->finansije_q);
+            $result->finansije_a = json_decode($result->finansije_a);
+            $result->ljudski_resursi_q = json_decode($result->ljudski_resursi_q);
+            $result->ljudski_resursi_a = json_decode($result->ljudski_resursi_a);
+            $result->marketing_q = json_decode($result->marketing_q);
+            $result->marketing_a = json_decode($result->marketing_a);
+            $result->proces_q = json_decode($result->proces_q);
+            $result->proces_a = json_decode($result->proces_a);
+            $result->strategija_q = json_decode($result->strategija_q);
+            $result->strategija_a = json_decode($result->strategija_a);
         }
 
         wp_send_json_success($results);

@@ -162,7 +162,12 @@ jQuery(document).ready(function ($) {
   $(".submit-quiz").click(function () {
     if ($(this).text() === "Pošalji") {
       var email = $("input.kontakt_e-mail_adresa").val();
-      if (!validateEmail(email)) {
+      var naziv = $("input.naziv_privrednog_drustva").val();
+      if (naziv.length < 1) {
+        $text = "Naziv privrednog društva je obavezno polje";
+        $(".message").text($text);
+        $(".message-wrap").show();
+      } else if (!validateEmail(email)) {
         $text = "Unesite validan email";
         $(".message").text($text);
         $(".message-wrap").show();
@@ -221,6 +226,7 @@ jQuery(document).ready(function ($) {
   }
 
   function quizData() {
+    // jQuery(".submit-quiz").attr("disabled", true);
     // get each tab and check if all questions are answered
     var allQuestionsAnswered = false;
     $finalChoices = [];
@@ -330,7 +336,7 @@ jQuery(document).ready(function ($) {
       $finalChoices.push($selectedChoices);
     });
 
-    // if (allQuestionsAnswered === true) {
+    // if (allQuestionsAnswered === true)
     let ajaxUrl = inndigit_ajax_object.ajax_url;
     $data = $finalChoices;
 
@@ -347,9 +353,10 @@ jQuery(document).ready(function ($) {
           $text =
             "Upitnik je uspješno poslat. Provjerite " +
             email +
-            " za rezultate.";
+            " za rezultate. Ukoliko ne dobijete email za par minuta, pokušajte ponovo.";
           $(".message").text($text);
           $(".message-wrap").show();
+          
         } else {
           console.log(response.data); // error message
         }

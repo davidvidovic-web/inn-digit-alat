@@ -5,22 +5,22 @@ namespace InnDigit\Components\Admin;
 global $wpdb;
 $table = $wpdb->prefix . 'inndigit';
 
-$sql = "SELECT * FROM $table";
+$sql = "SELECT * FROM $table ORDER BY datum DESC";
 $results = $wpdb->get_results($sql);
 
 
 
 foreach ($results as $result) {
-  $result->finansije_q = unserialize($result->finansije_q);
-  $result->finansije_a = unserialize($result->finansije_a);
-  $result->ljudski_resursi_q = unserialize($result->ljudski_resursi_q);
-  $result->ljudski_resursi_a = unserialize($result->ljudski_resursi_a);
-  $result->marketing_q = unserialize($result->marketing_q);
-  $result->marketing_a = unserialize($result->marketing_a);
-  $result->proces_q = unserialize($result->proces_q);
-  $result->proces_a = unserialize($result->proces_a);
-  $result->strategija_q = unserialize($result->strategija_q);
-  $result->strategija_a = unserialize($result->strategija_a);
+  $result->finansije_q = json_decode($result->finansije_q);
+  $result->finansije_a = json_decode($result->finansije_a);
+  $result->ljudski_resursi_q = json_decode($result->ljudski_resursi_q);
+  $result->ljudski_resursi_a = json_decode($result->ljudski_resursi_a);
+  $result->marketing_q = json_decode($result->marketing_q);
+  $result->marketing_a = json_decode($result->marketing_a);
+  $result->proces_q = json_decode($result->proces_q);
+  $result->proces_a = json_decode($result->proces_a);
+  $result->strategija_q = json_decode($result->strategija_q);
+  $result->strategija_a = json_decode($result->strategija_a);
 }
 
 
@@ -130,7 +130,7 @@ foreach ($results as $result) {
       $sqlDate = $result->datum;
       $sqlDate = explode(' ', $sqlDate);
       echo '<p> * Ukoliko je privredno društvo poslalo više upitnika u toku jednog dana biće kreiran samo inicijalni PDF </p>';
-      echo '<div class="footer-actions"><a target="_blank" href="/wp-content/plugins/inn-digit-alat/pdfs/' . $result->naziv_privrednog_drustva . '-rezultati-' . $sqlDate[0] . '.pdf"><button class="pdf-button">Pogledaj rezultat</button></a></div>';
+      echo '<div class="footer-actions"><a target="_blank" href="/wp-content/plugins/inn-digit-alat/pdfs/InnDigit-ALAT-' . $result->naziv_privrednog_drustva . '-rezultati-' . $sqlDate[0] . '.pdf"><button class="pdf-button">Pogledaj rezultat</button></a></div>';
       echo '</div>';
       echo '</div>';
       echo '</div>';

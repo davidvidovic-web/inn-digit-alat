@@ -263,7 +263,7 @@
   background-image: none;
   flex: 1;
   padding: 0 0.5em;
-  color: #fff;
+  color: #f1f5f7 !important;
   cursor: pointer;
   font-size: 1em;
   font-family: "Open Sans", sans-serif;
@@ -296,6 +296,10 @@
 .quiz .select:hover::after {
   color: #fff;
 }
+
+.quiz .button[disabled="disabled"] {
+  filter: grayscale(1);
+} 
 
 .quiz .button {
   position: relative;
@@ -350,7 +354,7 @@
 
 /* Customize the label (the container) */
 .checkbox-container-confirmation {
-  display: flex;
+  /* display: flex; */
   position: relative;
   cursor: pointer;
   -webkit-user-select: none;
@@ -425,6 +429,7 @@
   position: relative;
   display: flex;
   gap: 15px;
+  margin-top: 25px;
 }
 
 .message-wrap {
@@ -452,4 +457,3 @@
   background: #fff;
   color: #0073aa;
 }
-

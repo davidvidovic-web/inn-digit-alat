@@ -18,7 +18,7 @@ class Fields
 
 				array(
 					'key' => 'field_65da64b22c570',
-					'label' => 'STRATEGIJA (oblast S)',
+					'label' => 'STRATEGIJA',
 					'name' => 'strategija_oblast_s',
 					'aria-label' => '',
 					'type' => 'repeater',
@@ -257,7 +257,7 @@ class Fields
 				),
 				array(
 					'key' => 'field_65da6b87cfece',
-					'label' => 'PROCES (oblast P)',
+					'label' => 'PROCES',
 					'name' => 'proces_oblast_p',
 					'aria-label' => '',
 					'type' => 'repeater',
@@ -508,7 +508,7 @@ class Fields
 				),
 				array(
 					'key' => 'field_65da73c2da694',
-					'label' => 'LJUDSKI RESURSI (oblast H)',
+					'label' => 'LJUDSKI RESURSI',
 					'name' => 'ljudski_resursi_oblast_h',
 					'aria-label' => '',
 					'type' => 'repeater',
@@ -564,7 +564,7 @@ class Fields
 				),
 				array(
 					'key' => 'field_65da74168e45c',
-					'label' => 'MARKETING (oblast M)',
+					'label' => 'MARKETING',
 					'name' => 'marketing_oblast_m',
 					'aria-label' => '',
 					'type' => 'repeater',
@@ -653,7 +653,7 @@ class Fields
 				),
 				array(
 					'key' => 'field_65da745bc49f5',
-					'label' => 'FINANSIJE (oblast F)',
+					'label' => 'FINANSIJE',
 					'name' => 'finansije_oblast_f',
 					'aria-label' => '',
 					'type' => 'repeater',
@@ -747,7 +747,7 @@ class Fields
 				),
 				array(
 					'key' => 'field_65da58403b6aa',
-					'label' => 'KONTAKT (oblast K)',
+					'label' => 'KONTAKT',
 					'name' => 'kontakt_oblast_k',
 					'aria-label' => '',
 					'type' => 'repeater',
@@ -1145,7 +1145,7 @@ class Fields
 						),
 						array(
 							'key' => 'field_65da61d5aa246',
-							'label' => '"Podaci koje ste naveli se obrađuju u svrhu istraživanja i dostavljanja Izvještaja o samoprocjeni te radi budućeg kontaktiranja sa članovima Privredne komore. U tom smislu mogu biti korišćena adresa i drugi podaci iz odgovora. Podatke dajete dobrovoljno, ali su nužni da biste dobili Izvještaj o samoprocjeni. Više nađite u Politici privatnosti. Molimo saglasnost za:"',
+							'label' => 'Podaci koje ste naveli se obrađuju u svrhu istraživanja i dostavljanja Izvještaja o samoprocjeni te radi budućeg kontaktiranja sa članovima Privredne komore. U tom smislu mogu biti korišćena adresa i drugi podaci iz odgovora. Podatke dajete dobrovoljno, ali su nužni da biste dobili Izvještaj o samoprocjeni. Više nađite u <a style="display: inline-block;" href="/politika-privatnosti/">Politici privatnosti</a>. <br>',
 							'name' => 'podaci_koje_ste_naveli_se_obraduju_u_svrhu_istrazivanja_i_dostavljanja_izvjestaja_o_samoprocjeni_te_radi_buduceg_kontaktiranja_sa_clanovima_privredne_komore_u_tom_smislu_mogu_biti_koriscena_adresa_i_drugi_podaci_iz_odgovora_podatke_dajete_dobrovoljno_ali_su_nuzni_da_biste_dobili_izvjestaj_o_samoprocjeni_vise_nadite_u_politici_privatnosti_molimo_saglasnost_za:',
 							'aria-label' => '',
 							'type' => 'true_false',

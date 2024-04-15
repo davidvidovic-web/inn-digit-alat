@@ -86,18 +86,18 @@ class ProcessData
 
 
         $result = $wpdb->insert("$table_name", array(
-            'finansije_q' => serialize($update['finansije_q']),
-            'finansije_a' => serialize($update['finansije_a']),
+            'finansije_q' => json_encode($update['finansije_q']),
+            'finansije_a' => json_encode($update['finansije_a']),
             'naziv_privrednog_drustva' => $update['naziv_privrednog_drustva'],
             'email' => $update['email'],
-            'ljudski_resursi_q' => serialize($update['ljudski_resursi_q']),
-            'ljudski_resursi_a' => serialize($update['ljudski_resursi_a']),
-            'marketing_q' => serialize($update['marketing_q']),
-            'marketing_a' => serialize($update['marketing_a']),
-            'proces_q' => serialize($update['proces_q']),
-            'proces_a' => serialize($update['proces_a']),
-            'strategija_q' => serialize($update['strategija_q']),
-            'strategija_a' => serialize($update['strategija_a']),
+            'ljudski_resursi_q' => json_encode($update['ljudski_resursi_q']),
+            'ljudski_resursi_a' => json_encode($update['ljudski_resursi_a']),
+            'marketing_q' => json_encode($update['marketing_q']),
+            'marketing_a' => json_encode($update['marketing_a']),
+            'proces_q' => json_encode($update['proces_q']),
+            'proces_a' => json_encode($update['proces_a']),
+            'strategija_q' => json_encode($update['strategija_q']),
+            'strategija_a' => json_encode($update['strategija_a']),
             'datum' => $date
         ));
     }
@@ -175,9 +175,9 @@ class ProcessData
             $data[$area]['grade'] = $grade;
         }
         $cummulative = ($cummulative / 5);
-        if ($cummulative <= 1.09) {
+        if ($cummulative <= 1.50) {
             $general_result = 'Nizak';
-        } elseif ($cummulative > 1.09 && $cummulative <= 2) {
+        } elseif ($cummulative > 1.50 && $cummulative <= 2.25) {
             $general_result = 'Srednji';
         } else {
             $general_result = 'Napredni';
