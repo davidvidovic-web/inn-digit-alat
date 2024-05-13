@@ -7,7 +7,7 @@ use InnDigit\Components\Quiz\Constants;
 class ProcessData
 {
 
-    public function write_to_db($data)
+    public function write_to_db($data, $return_data)
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'inndigit';
@@ -81,9 +81,7 @@ class ProcessData
         $date = time();
         $date = $this->toDateTime($date);
 
-
-
-
+        $update['ocjena'] = $return_data['general_result'];
 
         $result = $wpdb->insert("$table_name", array(
             'finansije_q' => json_encode($update['finansije_q']),
@@ -98,6 +96,7 @@ class ProcessData
             'proces_a' => json_encode($update['proces_a']),
             'strategija_q' => json_encode($update['strategija_q']),
             'strategija_a' => json_encode($update['strategija_a']),
+            'ocjena' => json_encode($update['ocjena']),
             'datum' => $date
         ));
     }
@@ -109,6 +108,7 @@ class ProcessData
 
     public function sort($data)
     {
+        $pass_data = $data;
         $sorted_data = [];
         $spec = [];
         foreach ($data as $key => $entry_group) {
@@ -152,6 +152,7 @@ class ProcessData
         $spec = array_unique($spec);
         $sorted_data['spec'] = $spec;
         $return_data = $this->get_results($sorted_data);
+        $this->write_to_db($pass_data, $return_data);
         return $return_data;
     }
 

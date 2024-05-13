@@ -22,6 +22,8 @@ class Plugin
         add_action('wp_ajax_nopriv_get_quiz_data', [&$this, 'get_quiz_data']);
         add_action('wp_ajax_get_quiz_data_db', [&$this, 'get_quiz_data_db']);
         add_action('wp_ajax_nopriv_get_quiz_data_db', [&$this, 'get_quiz_data_db']);
+        add_action('wp_ajax_remove_quiz_item', [&$this, 'remove_quiz_item']);
+        add_action('wp_ajax_nopriv_remove_quiz_item', [&$this, 'remove_quiz_item']);
     }
 
     //run the plugin
@@ -42,7 +44,6 @@ class Plugin
     {
         global $wpdb;
         $db_table_name = $wpdb->prefix . 'inndigit';  // table name
-        // $charset_collate = $wpdb->get_charset_collate();X
 
         //Check to see if the table exists already, if not, then create it
         if ($wpdb->get_var("show tables like '$db_table_name'") != $db_table_name) {
@@ -63,7 +64,6 @@ class Plugin
                         email varchar(50) NOT NULL,
                         datum datetime NOT NULL,
                         UNIQUE KEY id (id)
-    
                 );";
 
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -123,22 +123,16 @@ class Plugin
             return;
         }
 
-
-
-
-
         // Get the data from the request
         $data = $_POST['data'];
 
         $processData = new ProcessData($data);
-        $write_to_db = $processData->write_to_db($data);
         $data = $processData->sort($data);
 
         $pdf = new ResultsPdf();
         $email_data = $pdf->create_pdf($data);
         $this->email_pdf($email_data);
         wp_send_json_success($data);
-        
     }
 
     public function email_pdf($email_data)
@@ -151,28 +145,32 @@ class Plugin
     public function get_quiz_data_db()
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'inndigit';
 
-        $sql = "SELECT * FROM $table";
+
+        $sql = "SELECT `ocjena`, `naziv_privrednog_drustva`, `email`, `datum` FROM $table";
         $results = $wpdb->get_results($sql);
 
 
 
         foreach ($results as $result) {
-            $result->finansije_q = json_decode($result->finansije_q);
-            $result->finansije_a = json_decode($result->finansije_a);
-            $result->ljudski_resursi_q = json_decode($result->ljudski_resursi_q);
-            $result->ljudski_resursi_a = json_decode($result->ljudski_resursi_a);
-            $result->marketing_q = json_decode($result->marketing_q);
-            $result->marketing_a = json_decode($result->marketing_a);
-            $result->proces_q = json_decode($result->proces_q);
-            $result->proces_a = json_decode($result->proces_a);
-            $result->strategija_q = json_decode($result->strategija_q);
-            $result->strategija_a = json_decode($result->strategija_a);
+            $result->ocjena = str_replace('"', '', $result->ocjena);
         }
 
         wp_send_json_success($results);
 
         return $results;
+    }
+
+    public function remove_quiz_item()
+    {
+        global $wpdb;
+        $id = $_POST['data'];
+        $table = $wpdb->prefix . 'inndigit';
+        wp_send_json_success($id);
+        return $wpdb->delete(
+            $table,
+            ['id' => $id],
+            ['%d'],
+        );
     }
 }

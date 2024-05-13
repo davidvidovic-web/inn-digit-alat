@@ -12,12 +12,6 @@ class ResultsPdf
     public function create_pdf($data)
     {
 
-        // $defaultConfig = (new Mpdf\Config\ConfigVariables())->getDefaults();
-        // $fontDirs = $defaultConfig['fontDir'];
-
-        // $defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
-        // $fontData = $defaultFontConfig['fontdata'];
-
         $mpdf = new Mpdf([
             'mode' => 's',
             'format' => 'A4',
@@ -103,38 +97,38 @@ class ResultsPdf
         $comments = Constants::$comments;
         $specData = [];
         $html = '<div style="position: fixed; top: 10mm; text-align: justify;">';
-        $html .= '<h4 style="font-size: 17px; text-decoration: underline;"> Preporuke za poboljšanje digitalne zrelosti i inovativnosti </h4><br>';
+        $html .= '<h4 style="font-size: 17px; text-decoration: underline; padding: 0; margin: 0;"> Preporuke za poboljšanje digitalne zrelosti i inovativnosti </h4><br>';
         foreach ($data as $area => $data) {
             if ($area !== 'kontakt_oblast_k' || $area !== 'general_result' || $area !== 'spec') {
                 $area_comment = strtoupper(substr($area, -1));
                 if (!empty($data['grade'])) {
                     $area_comment = $area_comment . $data['grade'];
-                    $html .= '<div class="area-comments">';
+                    $html .= '<div style="margin: 0; padding: 0;" class="area-comments">';
                     switch ($area) {
                         case 'strategija_oblast_s':
                             $area_name = 'Strategija';
                             $html .= '<p style="font-size: 15px; paddin-bottom: 2px;font-family: Calibri; text-align: justify; font-weight: bold;">' . $area_name . '</p>';
-                            $html .= '<p style="font-size: 15px; padding-bottom: 5px; font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
+                            $html .= '<p style="font-size: 15px; padding-bottom: 0px; font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
                             break;
                         case 'proces_oblast_p':
                             $area_name = 'Proces';
                             $html .= '<p style="font-size: 15px; paddin-bottom: 2px; font-family: Calibri; text-align: justify; font-weight: bold;">' . $area_name . '</p>';
-                            $html .= '<p style="font-size: 15px; padding-bottom: 5px;  font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
+                            $html .= '<p style="font-size: 15px; padding-bottom: 0px;  font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
                             break;
                         case 'ljudski_resursi_oblast_h':
                             $area_name = 'Ljudski resursi';
                             $html .= '<p style="font-size: 15px; paddin-bottom: 2px;font-family: Calibri; text-align: justify; font-weight: bold;">' . $area_name . '</p>';
-                            $html .= '<p style="font-size: 15px; padding-bottom: 5px;  font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
+                            $html .= '<p style="font-size: 15px; padding-bottom: 0px;  font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
                             break;
                         case 'marketing_oblast_m':
                             $area_name = 'Marketing';
                             $html .= '<p style="font-size: 15px; paddin-bottom: 2px;font-family: Calibri; text-align: justify; font-weight: bold;">' . $area_name . '</p>';
-                            $html .= '<p style="font-size: 15px; padding-bottom: 5px;  font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
+                            $html .= '<p style="font-size: 15px; padding-bottom: 0px;  font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
                             break;
                         case 'finansije_oblast_f':
                             $area_name = 'Finansije';
                             $html .= '<p style="font-size: 15px; paddin-bottom: 2px;font-family: Calibri; text-align: justify; font-weight: bold;">' . $area_name . '</p>';
-                            $html .= '<p style="font-size: 15px; padding-bottom: 5px;  font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
+                            $html .= '<p style="font-size: 15px; padding-bottom: 0px;  font-family: Calibri; text-align: justify">' . $comments[$area_comment] . '</p>';
                             break;
                     }
                     $html .= '</div>';
@@ -179,6 +173,8 @@ class ResultsPdf
         $mpdf->useTemplate($contactTemplate);
         $mpdf->WriteHTML('');
         $date = date('Y-m-d');
+        $companyName = str_replace(" ", "", $companyName);
+        $companyName = preg_replace("/[^\w\s]/", "", $companyName);
         $pdfName = 'InnDigit-ALAT-' . $companyName . '-rezultati-' . $date . '.pdf';
         if (!file_exists(PLUGIN_DIR . 'pdfs/' . $pdfName)) {
             $mpdf->Output(PLUGIN_DIR . 'pdfs/' . $pdfName, 'F');

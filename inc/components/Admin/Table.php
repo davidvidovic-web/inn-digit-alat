@@ -18,132 +18,40 @@
             },
             function(response) {
                 if (response.success) {
-                    tableData = response.data; // log the field value
-                    let columns = [];
-                    for (let i in tableData) {
-                        columns[i] = [];
-                        columns[i].push(tableData[i].naziv_privrednog_drustva);
-                        columns[i].push(tableData[i].email);
-                        for (let j in tableData[i].finansije_q) {
-                            let answer = Object.values(tableData[i].finansije_a[j]);
-                            columns[i].push(answer);
-                        }
-                        for (let j in tableData[i].marketing_q) {
-                            let answer = Object.values(tableData[i].marketing_a[j]);
-                            columns[i].push(answer);
-                        }
-                        for (let j in tableData[i].ljudski_resursi_q) {
-                            columns[i].push(tableData[i].ljudski_resursi_a[j]);
-                        }
-                        for (let j in tableData[i].proces_q) {
-                            let answer = Object.values(tableData[i].proces_a[j]);
-                            columns[i].push(answer);
-                        }
-                        for (let j in tableData[i].strategija_q) {
-                            let answer = Object.values(tableData[i].strategija_a[j]);
-                            columns[i].push(answer);
-                        }
-
-                        columns[i].push(tableData[i].datum);
-                    }
-
                     $('.table').DataTable({
                         dom: 'Bfrtip',
                         buttons: [
                             'excel',
                             'print'
                         ],
+                        data: response.data,
                         columns: [{
+                                data: 'naziv_privrednog_drustva',
                                 title: 'Naziv privrednog drustva'
                             },
                             {
+                                data: 'email',
                                 title: 'Email'
                             },
                             {
-                                title: 'Šta sprečava veća ulaganja u digitalnu transformaciju u kompaniji? (Možete izabrati jedan ili više odgovora)'
+                                data: 'ocjena',
+                                title: 'Nivo digitalizacije'
                             },
                             {
-                                title: 'Da li ste učestvovali u nekim od programa podrške digitalnoj transformaciji privrednih društava? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Koje od navedenih digitalnih kanala koristite za prodaju, komunikaciju i/ili građenje odnosa sa klijentima? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'U kojoj mjeri generalno prikupljate i koristite podatke (o kupcima, dobavljačima i drugim partnerima) u svrhu razvoja i transformacije poslovanja kompanije?  (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Kako se provodi obuka za pripremu zaposlenih za digitalnu transformaciju? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Koje digitalne tehnologije trenutno koristite u kompaniji? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Koje od usluga eUprave koristite? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Na koji način pratite i upravljate inovacijama? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Da li su procesi automatizovani? (uzmite u obzir proizvodnju/pružanje usluga i/ili administraciju i/ili građevinske objekte) (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Da li pratite stanje mašina i kako provodite održavanje? (Možete izabrati jedan odgovor)'
-                            },
-                            {
-                                title: 'Kako dizajnirate proizvode? (Možete izabrati jedan ili više odgovora) '
-                            },
-                            {
-                                title: 'Ukoliko preduzeće koristi 3D projektovanje u razvoju novog proizvoda, da li imate vlastite uređaje za projekotvanje? (Možete izabrati jedan odgovor)'
-                            },
-                            {
-                                title: 'Koju/koje od navedenih aktivnosti ste do sada proveli u polju primjene digitalne transformacije u kompaniji? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Koje aktivnosti planirate provesti ili smatrate da bi bilo potrebno provesti u cilju primjene digitalne transformacije u kompaniji? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Kako primjenjujete vještačku inteligenciju u poslovanju? (Možete izabrati jedan odgovor)'
-                            },
-                            {
-                                title: 'Kako se rukovodstvo odnosi prema inovacijama u kompaniji? (Možete izabrati jedan odgovor)'
-                            },
-                            {
-                                title: 'Na koje područje u kompaniji će digitalna transformacija imati najveći uticaj? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
-                                title: 'Šta je prioritet kojem je potrebno posvetiti najviše resursa u naredne dvije godine? (Možete izabrati jedan ili više odgovora)'
-                            },
-                            {
+                                data: 'datum',
                                 title: 'Datum'
-                            }
+                            },
                         ],
-                        data: columns
+                        select: true
                     });
 
-                    createInnerRows();
-
+                    console.log(response.data);
                 } else {
                     console.log(response.data); // error message
                 }
             }
         );
 
-        function createInnerRows() {
-            $('.dataTable td').each(function() {
-                let answerText = $(this).text();
-                let splitText = answerText.split('.,');
-                let finalText = '';
-                splitText.forEach(function(text, index) {
-                    text = document.createTextNode('<div>' + text + '</div>');
-                    $(this).append(text);
-                    // finalText += text;
-                    // console.log(finalText)
-                })
-                console.log(finalText);
-                // $(this).text(finalText);
-                // $('.dataTable ').listview('trigger');
-            })
-        }
 
 
 

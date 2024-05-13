@@ -34,14 +34,17 @@ foreach ($results as $result) {
     <div>Naziv privrednog društva</div>
     <div>Kontakt email</div>
     <div>Datum</div>
+    <div style="width: 10%;"><img style="width: 16px; height: 16px;" src="<?php echo PLUGIN_URL . 'assets/icons/trash.svg' ?>"></div>
   </div>
-  <div class="table-content">
+  <div class=" table-content">
     <?php foreach ($results as $result) {
       echo '<div class="table-content-entry-wrapper">';
       echo '<div class="table-content-header">';
+      echo '<div style="display: none;" id="' . $result->id . '"></div>';
       echo '<div>' . $result->naziv_privrednog_drustva . '</div>';
       echo '<div>' . $result->email . '</div>';
       echo '<div>' . $result->datum . '</div>';
+      echo '<div style="width: 10%;">' . '<a href="#" onClick="removeItem(' . $result->id . ')">' . '<img style="width: 16px; height: 16px;" src="' . PLUGIN_URL . 'assets/icons/trash.svg"></a>' . '</div>';
       echo '</div>';
       echo '<div class="table-content-data">';
 
@@ -130,7 +133,9 @@ foreach ($results as $result) {
       $sqlDate = $result->datum;
       $sqlDate = explode(' ', $sqlDate);
       echo '<p> * Ukoliko je privredno društvo poslalo više upitnika u toku jednog dana biće kreiran samo inicijalni PDF </p>';
-      echo '<div class="footer-actions"><a target="_blank" href="/wp-content/plugins/inn-digit-alat/pdfs/InnDigit-ALAT-' . $result->naziv_privrednog_drustva . '-rezultati-' . $sqlDate[0] . '.pdf"><button class="pdf-button">Pogledaj rezultat</button></a></div>';
+      $companyName = str_replace(" ", "", $result->naziv_privrednog_drustva);
+      $companyName = preg_replace("/[^\w\s]/", "", $companyName);
+      echo '<div class="footer-actions"><a target="_blank" href="/wp-content/plugins/inn-digit-alat/pdfs/InnDigit-ALAT-' . $companyName . '-rezultati-' . $sqlDate[0] . '.pdf"><button class="pdf-button">Pogledaj rezultat</button></a></div>';
       echo '</div>';
       echo '</div>';
       echo '</div>';
@@ -176,11 +181,34 @@ foreach ($results as $result) {
     font-weight: bold;
     text-align: center;
     padding: 20px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    min-height: 86px;
+  }
+
+  .table-content-header>div>a {
+    position: relative;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .table-content-header>div>a:hover {
+    background: #0073aa;
+    padding: 15px 20px;
+    border-radius: 8px;
+    filter: invert(1);
+    transition: all 0.3s ease;
   }
 
   .table-header>div:nth-child(2) {
     border-left: 1px solid;
     border-right: 1px solid;
+  }
+
+  .table-header>div:nth-child(3) {
+    border-right: 1px solid;
+    border-radius: 0;
   }
 
   .table-content-data {
@@ -241,10 +269,6 @@ foreach ($results as $result) {
     border-top-left-radius: 8px;
   }
 
-  .table .table-header>div:nth-child(3) {
-    border-top-right-radius: 8px;
-  }
-
   .table-content-entry-wrapper:nth-last-child() .table-content-header>div:nth-child(1) {
     border-bottom-left-radius: 8px;
   }
@@ -275,6 +299,15 @@ foreach ($results as $result) {
     color: #0073aa;
   }
 
+  .table-content-entry-wrapper:nth-child(even) img {
+    filter: invert(1);
+  }
+
+  .table-content-entry-wrapper:nth-child(even) a:hover {
+    filter: invert(0);
+    background: #d98a4f;
+  }
+
   a button:hover,
   .table-content-entry-wrapper:hover {
     cursor: pointer;
@@ -295,4 +328,25 @@ foreach ($results as $result) {
       })
     })
   });
+
+  function removeItem(id) {
+    event.preventDefault();
+    event.stopPropagation();
+    let ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
+
+    jQuery.post(
+      ajaxUrl, {
+        action: "remove_quiz_item",
+        data: id,
+      },
+      function(response) {
+        if (response.success) {
+          var parent = jQuery('div#' + id).parent().parent();
+          parent.fadeOut();
+        } else {
+          console.log(id); // error message
+        }
+      }
+    );
+  }
 </script>

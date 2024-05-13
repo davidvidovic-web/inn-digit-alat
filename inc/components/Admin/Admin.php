@@ -22,6 +22,15 @@ class Admin
             'dashicons-media-spreadsheet',
             3
         );
+        add_menu_page(
+            __('InnDigit Excel', 'inndigit'),
+            __('InnDigit Excel', 'inndigit'),
+            'manage_options',
+            '/inn-digit-alat/inc/Components/Admin/Table.php',
+            $this->frontend_shortcode(''),
+            'dashicons-media-spreadsheet',
+            3
+        );
     }
 
     public function frontend_shortcode($atts, $content = "")
