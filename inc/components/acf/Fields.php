@@ -131,7 +131,7 @@ class Fields
 								'id' => '',
 							),
 							'choices' => array(
-								'Zaposleni u svom u svom radu zazvijaju modele vještačke inteligencije u skladu sa poslovnim potrebama' => '3',
+								'Zaposleni razvijaju modele vještačke inteligencije u skladu sa poslovnim potrebama' => '3',
 								'Zaposleni koriste vještačku ineligenciju pri obradi podataka i kreiranju izvještaja' => '3',
 								'Rukovodstvo ima razvijenu svijest o mogućnostima vještačke inteligencije i primjeni u poslovanju' => '1',
 								'Rukovodstvo nema razvijenu svijest o mogućnostima vještačke inteligencije' => '0',
@@ -430,6 +430,8 @@ class Fields
 								'Preduzeće koristi softver za praćenje održavanja mašina i postrojenja.' => '3',
 								'Preduzeće ima definisan plan praćenja stanja mašina za koji su odgovorni rukovaoci mašinama. Održavanje mašina obavljaju eksterno angažovani majstori.' => '1',
 								'Preduzeće prati stanje mašina po potrebi, odnosno u zavisnosti od zastoja u proizvodnom procesu.' => '0',
+								'Ništa od navedenog.' => '0',
+								'Nije primjenjivo u našem poslovanju.' => '0'
 							),
 							'default_value' => false,
 							'return_format' => 'value',
@@ -489,7 +491,7 @@ class Fields
 								'id' => '',
 							),
 							'choices' => array(
-								'Da, preduzeće podjeduje 3D uređaje za projektovanje novih proizvoda.' => '3',
+								'Da, preduzeće posjeduje 3D uređaje za projektovanje novih proizvoda.' => '3',
 								'Ne, pri projektovanju novih proizvoda, koristimo usluge drugog preduzeća pri 3D projektovanju.' => '2',
 								'Ne koristimo 3D modelovanje, ali ramišljamo da počnemo koristiti 3D modelovanje u razvoju novih proizvoda.' => '1',
 								'Ne koristimo 3D modelovanje pri razvoju novih proizvoda i trenutno nemamo potrebu za korištenjem istog.' => '0',
