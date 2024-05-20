@@ -35,6 +35,7 @@ foreach ($results as $result) {
     <div>Kontakt email</div>
     <div>Datum</div>
     <div style="width: 10%;"><img style="width: 16px; height: 16px;" src="<?php echo PLUGIN_URL . 'assets/icons/trash.svg' ?>"></div>
+    <div style="width: 10%;"><img style="width: 16px; height: 16px;" src="<?php echo PLUGIN_URL . 'assets/icons/excel.svg' ?>"></div>
   </div>
   <div class=" table-content">
     <?php foreach ($results as $result) {
@@ -45,6 +46,7 @@ foreach ($results as $result) {
       echo '<div>' . $result->email . '</div>';
       echo '<div>' . $result->datum . '</div>';
       echo '<div style="width: 10%;">' . '<a href="#" onClick="removeItem(' . $result->id . ')">' . '<img style="width: 16px; height: 16px;" src="' . PLUGIN_URL . 'assets/icons/trash.svg"></a>' . '</div>';
+      echo '<div style="width: 10%;">' . '<a href="#" onClick="createExcel(' . $result->id . ')">' . '<img style="width: 16px; height: 16px;" src="' . PLUGIN_URL . 'assets/icons/excel.svg"></a>' . '</div>';
       echo '</div>';
       echo '<div class="table-content-data">';
 
@@ -343,6 +345,26 @@ foreach ($results as $result) {
         if (response.success) {
           var parent = jQuery('div#' + id).parent().parent();
           parent.fadeOut();
+        } else {
+          console.log(id); // error message
+        }
+      }
+    );
+  }
+
+  function createExcel(id) {
+    event.preventDefault();
+    event.stopPropagation();
+    let ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
+
+    jQuery.post(
+      ajaxUrl, {
+        action: "create_excel",
+        data: id,
+      },
+      function(response) {
+        if (response.success) {
+          console.log(response.data);
         } else {
           console.log(id); // error message
         }

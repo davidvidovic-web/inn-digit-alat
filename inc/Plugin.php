@@ -9,6 +9,8 @@ use InnDigit\Components\Quiz\QuizForm;
 use InnDigit\Components\Quiz\ProcessData;
 use InnDigit\Components\Pdf\ResultsPdf;
 use InnDigit\Components\Email\Email;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 
@@ -24,6 +26,8 @@ class Plugin
         add_action('wp_ajax_nopriv_get_quiz_data_db', [&$this, 'get_quiz_data_db']);
         add_action('wp_ajax_remove_quiz_item', [&$this, 'remove_quiz_item']);
         add_action('wp_ajax_nopriv_remove_quiz_item', [&$this, 'remove_quiz_item']);
+        add_action('wp_ajax_create_excel', [&$this, 'create_excel']);
+        add_action('wp_ajax_nopriv_create_excel', [&$this, 'create_excel']);
     }
 
     //run the plugin
@@ -145,8 +149,7 @@ class Plugin
     public function get_quiz_data_db()
     {
         global $wpdb;
-
-
+        $table = $wpdb->prefix . 'inndigit';
         $sql = "SELECT `ocjena`, `naziv_privrednog_drustva`, `email`, `datum` FROM $table";
         $results = $wpdb->get_results($sql);
 
@@ -172,5 +175,167 @@ class Plugin
             ['id' => $id],
             ['%d'],
         );
+    }
+
+    public function create_excel()
+    {
+        global $wpdb;
+        $id = $_POST['data'];
+        $table = $wpdb->prefix . 'inndigit';
+        $sql = "SELECT * FROM $table WHERE `id` = $id ORDER BY datum DESC";
+        $results = $wpdb->get_results($sql);
+
+        //json_decode first
+        foreach ($results as $result) {
+            $result->strategija_q = json_decode($result->strategija_q);
+            $result->strategija_a = json_decode($result->strategija_a);
+            $result->proces_q = json_decode($result->proces_q);
+            $result->proces_a = json_decode($result->proces_a);
+            $result->ljudski_resursi_q = json_decode($result->ljudski_resursi_q);
+            $result->ljudski_resursi_a = json_decode($result->ljudski_resursi_a);
+            $result->marketing_q = json_decode($result->marketing_q);
+            $result->marketing_a = json_decode($result->marketing_a);
+            $result->finansije_q = json_decode($result->finansije_q);
+            $result->finansije_a = json_decode($result->finansije_a);
+        }
+        $results = $results[0];
+        $filename = $results->naziv_privrednog_drustva . '-' . $results->datum;
+        // if (!file_exists(PLUGIN_DIR . 'xlsx/' . $filename . '.xlsx')) {
+        //     touch(PLUGIN_DIR . 'xlsx/' . $filename . '.xlsx');
+        // }
+
+
+        $spreadsheet = new Spreadsheet();
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(300, 'pt');
+        $spreadsheet->getDefaultStyle()->getAlignment()->setWrapText(true);
+
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+
+        $activeWorksheet->getStyle('A1:V1')->applyFromArray($styleArray);
+
+
+        $activeWorksheet->setCellValue('A1', 'Naziv privrednog drustva');
+        $activeWorksheet->setCellValue('A2', $results->naziv_privrednog_drustva);
+        $activeWorksheet->setCellValue('B1', 'Email');
+        $activeWorksheet->setCellValue('B2', $results->email);
+        $activeWorksheet->setCellValue('C1', 'Nivo digitalizacije');
+        $activeWorksheet->setCellValue('C2', $results->ocjena);
+        $activeWorksheet->setCellValue('D1', 'Datum');
+        $activeWorksheet->setCellValue('D2', $results->datum);
+        $activeWorksheet->setCellValue('E1', $results->strategija_q[0]);
+        foreach ($results->strategija_a[0] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('E' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('F1', $results->strategija_q[1]);
+        foreach ($results->strategija_a[1] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('F' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('G1', $results->strategija_q[2]);
+        foreach ($results->strategija_a[2] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('G' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('H1', $results->strategija_q[3]);
+        foreach ($results->strategija_a[3] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('H' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('I1', $results->strategija_q[4]);
+        foreach ($results->strategija_a[4] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('I' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('J1', $results->strategija_q[5]);
+        foreach ($results->strategija_a[5] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('J' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('K1', $results->proces_q[0]);
+        foreach ($results->proces_a[0] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('K' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('L1', $results->proces_q[1]);
+        foreach ($results->proces_a[1] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('L' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('M1', $results->proces_q[2]);
+        foreach ($results->proces_a[2] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('M' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('N1', $results->proces_q[3]);
+        foreach ($results->proces_a[3] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('N' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('O1', $results->proces_q[4]);
+        foreach ($results->proces_a[4] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('O' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('P1', $results->proces_q[5]);
+        foreach ($results->proces_a[5] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('P' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('Q1', $results->proces_q[6]);
+        foreach ($results->proces_a[6] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('Q' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('R1', $results->ljudski_resursi_q[0]);
+        foreach ($results->ljudski_resursi_a[0] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('R' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('S1', $results->marketing_q[0]);
+        foreach ($results->marketing_a[0] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('S' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('T1', $results->marketing_q[1]);
+        foreach ($results->marketing_a[1] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('T' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('U1', $results->finansije_q[0]);
+        foreach ($results->finansije_a[0] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('U' . $cellKey, $res);
+        }
+        $activeWorksheet->setCellValue('V1', $results->finansije_q[1]);
+        foreach ($results->finansije_a[1] as $key => $res) {
+            $cellKey = $key + 2;
+            $activeWorksheet->setCellValue('V' . $cellKey, $res);
+        }
+
+
+
+
+
+        /* Here there will be some code where you create $spreadsheet */
+
+        // redirect output to client browser
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="InnDigit-ALAT-' . $filename . '.xlsx' . '"');
+        header('Cache-Control: max-age=0');
+
+        // $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer = new Xlsx($spreadsheet);
+        // $writer->save('php://output');
+        $writer->save(PLUGIN_DIR . 'xlsx/InnDigit-ALAT-' . $filename . '.xlsx');
+        wp_send_json_success($results);
     }
 }

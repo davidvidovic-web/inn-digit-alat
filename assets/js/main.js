@@ -258,25 +258,25 @@ jQuery(document).ready(function ($) {
 
             $selectedChoices.push($currentChoice);
           });
-        } else if ($input.attr("type") === "radio") {
-          $radio = $(".tab-content").find("input[type='radio']:checked");
-          $radio.each(function () {
-            $label = $(this).parents(".field-wrap").children("label").text();
-            if ($(this).val() !== "") {
-              $currentChoice = {
-                area: $currentTab,
-                label: $label,
-                data: {
-                  dataValue: $(this).attr("data-quiz-value"),
-                  dataSpec: $(this).attr("data-spec"),
-                },
-                textAnswer: $(this).parents(".checkbox-wrap").text(),
-              };
-              $(this).parents(".field-wrap").addClass("answered");
-              $selectedChoices.push($currentChoice);
-            }
-          });
         }
+
+        $radio = $(input).find("input[type='radio']:checked");
+        $radio.each(function () {
+          $label = $(this).parents(".field-wrap").children("label").text();
+          if ($(this).val() !== "") {
+            $currentChoice = {
+              area: $currentTab,
+              label: $label,
+              data: {
+                dataValue: $(this).attr("data-quiz-value"),
+                dataSpec: $(this).attr("data-spec"),
+              },
+              textAnswer: $(this).parents(".checkbox-wrap").text(),
+            };
+            $(this).parents(".field-wrap").addClass("answered");
+            $selectedChoices.push($currentChoice);
+          }
+        });
 
         $select = $(input).find("select");
         $select.each(function () {
@@ -356,7 +356,7 @@ jQuery(document).ready(function ($) {
             " za rezultate. Ukoliko ne dobijete email za par minuta, pokušajte ponovo.";
           $(".message").text($text);
           $(".message-wrap").show();
-          
+          console.log(response.data);
         } else {
           console.log(response.data); // error message
         }
