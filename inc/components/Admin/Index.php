@@ -364,7 +364,23 @@ foreach ($results as $result) {
       },
       function(response) {
         if (response.success) {
-          console.log(response.data);
+          fetch(response.data[0])
+            // check to make sure you didn't have an unexpected failure (may need to check other things here depending on use case / backend)
+            .then(resp => resp.status === 200 ? resp.blob() : Promise.reject('Došlo je do greške'))
+            .then(blob => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.style.display = 'none';
+              a.href = url;
+              // the filename you want
+              a.download = response.data[1];
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              // or you know, something with better UX...
+              alert('Uspješno ste preuzeli fajl!');
+            })
+            .catch(() => alert('Došlo je do greške!'));
         } else {
           console.log(id); // error message
         }

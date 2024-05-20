@@ -199,12 +199,8 @@ class Plugin
             $result->finansije_a = json_decode($result->finansije_a);
         }
         $results = $results[0];
-        $filename = $results->naziv_privrednog_drustva . '-' . $results->datum;
-        // if (!file_exists(PLUGIN_DIR . 'xlsx/' . $filename . '.xlsx')) {
-        //     touch(PLUGIN_DIR . 'xlsx/' . $filename . '.xlsx');
-        // }
-
-
+        preg_match('/([^\s]+)/', $results->datum, $datum);
+        $filename = $results->naziv_privrednog_drustva . '-' . $datum[0];
         $spreadsheet = new Spreadsheet();
         $activeWorksheet = $spreadsheet->getActiveSheet();
         $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(300, 'pt');
@@ -222,7 +218,7 @@ class Plugin
         $activeWorksheet->getStyle('A1:V1')->applyFromArray($styleArray);
 
 
-        $activeWorksheet->setCellValue('A1', 'Naziv privrednog drustva');
+        $activeWorksheet->setCellValue('A1', 'Naziv privrednog društva');
         $activeWorksheet->setCellValue('A2', $results->naziv_privrednog_drustva);
         $activeWorksheet->setCellValue('B1', 'Email');
         $activeWorksheet->setCellValue('B2', $results->email);
@@ -321,21 +317,15 @@ class Plugin
             $activeWorksheet->setCellValue('V' . $cellKey, $res);
         }
 
-
-
-
-
-        /* Here there will be some code where you create $spreadsheet */
-
-        // redirect output to client browser
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="InnDigit-ALAT-' . $filename . '.xlsx' . '"');
-        header('Cache-Control: max-age=0');
-
-        // $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer = new Xlsx($spreadsheet);
-        // $writer->save('php://output');
         $writer->save(PLUGIN_DIR . 'xlsx/InnDigit-ALAT-' . $filename . '.xlsx');
-        wp_send_json_success($results);
+
+        // send to frontend for download
+        $url = get_site_url() . '/wp-content/plugins/inn-digit-alat/xlsx/InnDigit-ALAT-';
+        $full_url = $url . $filename . '.xlsx';
+        $full_filename = $filename . '.xlsx';
+        $res = [$full_url, $full_filename];
+        wp_send_json_success($res);
+        exit();
     }
 }
