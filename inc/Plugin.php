@@ -169,12 +169,12 @@ class Plugin
         global $wpdb;
         $id = $_POST['data'];
         $table = $wpdb->prefix . 'inndigit';
-        wp_send_json_success($id);
-        return $wpdb->delete(
+        $wpdb->delete(
             $table,
             ['id' => $id],
             ['%d'],
         );
+        wp_send_json_success($id);
     }
 
     public function create_excel()

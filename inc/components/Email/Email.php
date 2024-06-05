@@ -7,6 +7,7 @@ class Email
     public function __construct()
     {
         add_filter('wp_mail_content_type', [&$this, 'wp_set_content_type']);
+        add_action('wp_mail_failed', [&$this, 'onMailError'], 10, 1);
     }
     public function generate_email($data)
     {
@@ -46,5 +47,12 @@ class Email
     public function wp_set_content_type()
     {
         return "text/html";
+    }
+
+    public function onMailError($wp_error)
+    {
+        echo "<pre>";
+        print_r($wp_error);
+        echo "</pre>";
     }
 }
